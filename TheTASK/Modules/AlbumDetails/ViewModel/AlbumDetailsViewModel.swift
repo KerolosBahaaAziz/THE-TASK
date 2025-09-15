@@ -14,19 +14,23 @@ final class AlbumDetailsViewModel {
     @Published private(set) var photos: [Photo] = []
     @Published private(set) var filteredPhotos: [Photo] = []
     @Published var searchQuery: String = ""
+    @Published var errorMessage: String?
     
     private var cancellables = Set<AnyCancellable>()
-    
+    private let provider = MoyaProvider<ApiService>()   
+        
     func fetchPhotos(albumId: Int) {
         let target = ApiService.getPhotos(albumId: albumId)
         print("➡️ Fetching photos from: \(target.baseURL.absoluteString)\(target.path)?albumId=\(albumId)")
         
         provider.requestPublisher(target)
             .map([Photo].self)
+            .mapError { $0 as Error }  // unify error type
             .sink(
-                receiveCompletion: { completion in
+                receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
                         print("❌ Error: \(error)")
+                        self?.errorMessage = error.localizedDescription
                     }
                 },
                 receiveValue: { [weak self] photos in
@@ -37,8 +41,6 @@ final class AlbumDetailsViewModel {
             )
             .store(in: &cancellables)
         
-        
-        // bind search query
         $searchQuery
             .combineLatest($photos)
             .map { query, photos in

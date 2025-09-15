@@ -24,7 +24,6 @@ final class PhotoViewerViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .black
         
-        // ImageView setup
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = true
         view.addSubview(imageView)
@@ -32,7 +31,6 @@ final class PhotoViewerViewController: UIViewController {
         imageView.frame = view.bounds
         imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         
-        // Placeholder setup
         placeholderLabel.text = "No Photo"
         placeholderLabel.textColor = .white
         placeholderLabel.font = UIFont.boldSystemFont(ofSize: 24)
@@ -46,7 +44,6 @@ final class PhotoViewerViewController: UIViewController {
             placeholderLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
         
-        // Try to load image
         if let url = URL(string: photo.url) {
             imageView.sd_setImage(with: url) { [weak self] image, error, _, _ in
                 if image == nil || error != nil {

@@ -68,8 +68,6 @@ final class ProfileViewController: UIViewController {
     }
     
     private func bindViewModel() {
-        // Show loading when fetch starts
-        
         viewModel.$user
             .receive(on: RunLoop.main)
             .sink { [weak self] user in
@@ -83,6 +81,17 @@ final class ProfileViewController: UIViewController {
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
                 self?.tableView.reloadData()
+            }
+            .store(in: &cancellables)
+        
+        viewModel.$errorMessage
+            .compactMap { $0 }
+            .receive(on: RunLoop.main)
+            .sink { [weak self] message in
+                guard let self else { return }
+                self.showErrorAlert(message: message) { [weak self] in
+                    self?.viewModel.fetchUserAndAlbums()
+                }
             }
             .store(in: &cancellables)
     }

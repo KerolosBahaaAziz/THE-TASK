@@ -14,28 +14,29 @@ final class ProfileViewModel {
     @Published private(set) var user: User?
     @Published private(set) var albums: [Album] = []
     @Published private(set) var isLoading = false
+    @Published var errorMessage: String?
     
     private var cancellables = Set<AnyCancellable>()
     private let provider = MoyaProvider<ApiService>()
     
     func fetchUserAndAlbums() {
         isLoading = true
-        print("➡️ Fetching albums from: \(ApiService.getUsers.baseURL.absoluteString)\(ApiService.getUsers.path)")
+        
         provider.requestPublisher(ApiService.getUsers)
             .map([User].self)
-            .mapError { $0 as Error }   // ✅ outer publisher now has Failure = Error
+            .mapError { $0 as Error }
             .compactMap { $0.randomElement() }
             .flatMap { user -> AnyPublisher<(User, [Album]), Error> in
                 self.provider.requestPublisher(ApiService.getAlbums(userId: user.id))
                     .map([Album].self)
                     .map { (user, $0) }
-                    .mapError { $0 as Error }   // ✅ inner publisher also Failure = Error
+                    .mapError { $0 as Error }
                     .eraseToAnyPublisher()
             }
             .sink(receiveCompletion: { [weak self] completion in
                 self?.isLoading = false
                 if case .failure(let error) = completion {
-                    print("Error fetching user or albums: \(error)")
+                    self?.errorMessage = error.localizedDescription // 👈 publish error
                 }
             }, receiveValue: { [weak self] user, albums in
                 self?.user = user
@@ -43,4 +44,5 @@ final class ProfileViewModel {
             })
             .store(in: &cancellables)
     }
+    
 }

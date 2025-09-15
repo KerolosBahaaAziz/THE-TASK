@@ -17,6 +17,8 @@ final class AlbumDetailsViewController: UIViewController {
     private let collectionView: UICollectionView
     private let searchBar = UISearchBar()
     
+    var albumId : Int = 0
+    
     init(albumId: Int, title: String) {
         let layout = UICollectionViewFlowLayout()
         layout.minimumInteritemSpacing = 4
@@ -25,6 +27,7 @@ final class AlbumDetailsViewController: UIViewController {
         collectionView = UICollectionView(frame: .zero, collectionViewLayout: layout)
         super.init(nibName: nil, bundle: nil)
         self.title = title
+        self.albumId = albumId
         viewModel.fetchPhotos(albumId: albumId)
     }
     
@@ -76,11 +79,22 @@ final class AlbumDetailsViewController: UIViewController {
         viewModel.$filteredPhotos
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
-                print("now collection view will reload")
                 self?.collectionView.reloadData()
             }
             .store(in: &cancellables)
+        
+        viewModel.$errorMessage
+            .compactMap { $0 }
+            .receive(on: RunLoop.main)
+            .sink { [weak self] message in
+                self?.showErrorAlert(message: message) { [weak self] in
+                    self?.viewModel.fetchPhotos(albumId: self?.albumId ?? 0)
+                }
+            }
+            .store(in: &cancellables)
+
     }
+
 }
 
 extension AlbumDetailsViewController: UICollectionViewDataSource, UICollectionViewDelegate {
