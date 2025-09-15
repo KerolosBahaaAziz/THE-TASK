@@ -21,7 +21,7 @@
 		8FDF3C392E775D25005D8D94 /* Exceptions for "TheTASK" folder in "TheTASK" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				App/Info.plist,
+				Info.plist,
 			);
 			target = 8FDF3C232E775D20005D8D94 /* TheTASK */;
 		};
