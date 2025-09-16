@@ -28,12 +28,12 @@ It demonstrates clean architecture with **MVVM**, **Combine**, **UIKit**, and **
   - Photo viewer allows zoom and iOS share sheet.
 
 -------------------
-## warning ##
+## warning
 
 *** URLs of photos (https://via.placeholder.com/...), Unfortunately, do not load in some regions (including Egypt and parts of the Middle East).
 That’s why when you run the project, you may only see system placeholders instead of real images. ***
---------------------
 
+--------------------
 
 ## Tech Stack
 - **Language**: Swift 5.5
