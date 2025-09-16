@@ -29,9 +29,10 @@ It demonstrates clean architecture with **MVVM**, **Combine**, **UIKit**, and **
 
 -------------------
 ## warning ##
---------------------
+
 *** URLs of photos (https://via.placeholder.com/...), Unfortunately, do not load in some regions (including Egypt and parts of the Middle East).
 That’s why when you run the project, you may only see system placeholders instead of real images. ***
+--------------------
 
 
 ## Tech Stack
