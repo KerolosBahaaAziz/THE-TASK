@@ -8,10 +8,10 @@
 import Foundation
 import UIKit
 
-final class PhotoViewerViewController: UIViewController {
+final class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
     
+    private let scrollView = UIScrollView()
     private let imageView = UIImageView()
-    private let placeholderLabel = UILabel()
     private let photo: Photo
     
     init(photo: Photo) {
@@ -22,38 +22,30 @@ final class PhotoViewerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .black
+        view.backgroundColor = .systemBackground
+        
+        scrollView.delegate = self
+        scrollView.minimumZoomScale = 1.0
+        scrollView.maximumZoomScale = 4.0
+        scrollView.frame = view.bounds
+        scrollView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(scrollView)
         
         imageView.contentMode = .scaleAspectFit
         imageView.isUserInteractionEnabled = true
-        view.addSubview(imageView)
-        
-        imageView.frame = view.bounds
+        imageView.frame = scrollView.bounds
+        imageView.backgroundColor = .systemGray6
         imageView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
-        placeholderLabel.text = "No Photo"
-        placeholderLabel.textColor = .white
-        placeholderLabel.font = UIFont.boldSystemFont(ofSize: 24)
-        placeholderLabel.textAlignment = .center
-        placeholderLabel.alpha = 0.8
-        view.addSubview(placeholderLabel)
-        
-        placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            placeholderLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            placeholderLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
-        ])
+        scrollView.addSubview(imageView)
         
         if let url = URL(string: photo.url) {
             imageView.sd_setImage(with: url) { [weak self] image, error, _, _ in
                 if image == nil || error != nil {
-                    self?.showPlaceholder()
-                } else {
-                    self?.hidePlaceholder()
+                    self?.showErrorImage()
                 }
             }
         } else {
-            showPlaceholder()
+            showErrorImage()
         }
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -63,20 +55,23 @@ final class PhotoViewerViewController: UIViewController {
         )
     }
     
-    private func showPlaceholder() {
-        imageView.isHidden = true
-        placeholderLabel.isHidden = false
+    private func showErrorImage() {
+        imageView.contentMode = .center
+        let config = UIImage.SymbolConfiguration(pointSize: 120, weight: .bold)
+        imageView.image = UIImage(systemName: "exclamationmark.triangle", withConfiguration: config)?.withRenderingMode(.alwaysTemplate)
     }
-    
-    private func hidePlaceholder() {
-        imageView.isHidden = false
-        placeholderLabel.isHidden = true
-    }
+
     
     @objc private func sharePhoto() {
         guard let image = imageView.image else { return }
         let activityVC = UIActivityViewController(activityItems: [image], applicationActivities: nil)
         present(activityVC, animated: true)
     }
+    
+    // MARK: - UIScrollViewDelegate
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
+        return imageView
+    }
 }
+
 
