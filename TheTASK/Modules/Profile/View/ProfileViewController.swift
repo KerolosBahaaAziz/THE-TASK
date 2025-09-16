@@ -149,8 +149,6 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         navigationController?.pushViewController(detailsVC, animated: true)
     }
     
-
-
 }
 
 extension ProfileViewController: SkeletonTableViewDataSource {

@@ -10,6 +10,8 @@ import UIKit
 import SDWebImage
 
 final class PhotoCell: UICollectionViewCell {
+    static let indentifier = "PhotoCell"
+    
     private let imageView = UIImageView()
     
     override init(frame: CGRect) {

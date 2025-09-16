@@ -49,7 +49,7 @@ final class AlbumDetailsViewController: UIViewController {
         
         collectionView.dataSource = self
         collectionView.delegate = self
-        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: "PhotoCell")
+        collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: PhotoCell.indentifier)
         collectionView.keyboardDismissMode = .onDrag
         collectionView.isSkeletonable = true
         collectionView.showAnimatedGradientSkeleton()
@@ -106,7 +106,7 @@ extension AlbumDetailsViewController: UICollectionViewDataSource, UICollectionVi
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoCell
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: PhotoCell.indentifier, for: indexPath) as! PhotoCell
         let photo = viewModel.filteredPhotos[indexPath.item]
         cell.configure(with: photo)
         return cell
@@ -145,11 +145,11 @@ extension AlbumDetailsViewController: UICollectionViewDelegateFlowLayout {
 extension AlbumDetailsViewController: SkeletonCollectionViewDataSource {
     
     func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 12
+        return 15
     }
     
     func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
-        return "PhotoCell"
+        return PhotoCell.indentifier
     }
 }
 

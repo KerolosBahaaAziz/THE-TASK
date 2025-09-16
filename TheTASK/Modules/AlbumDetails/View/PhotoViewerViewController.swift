@@ -24,6 +24,11 @@ final class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         
+        setupUI()
+        createShareButton()
+    }
+    
+    func setupUI(){
         scrollView.delegate = self
         scrollView.minimumZoomScale = 1.0
         scrollView.maximumZoomScale = 4.0
@@ -47,12 +52,6 @@ final class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
         } else {
             showErrorImage()
         }
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            barButtonSystemItem: .action,
-            target: self,
-            action: #selector(sharePhoto)
-        )
     }
     
     private func showErrorImage() {
@@ -61,6 +60,13 @@ final class PhotoViewerViewController: UIViewController, UIScrollViewDelegate {
         imageView.image = UIImage(systemName: "exclamationmark.triangle", withConfiguration: config)?.withRenderingMode(.alwaysTemplate)
     }
 
+    func createShareButton(){
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            barButtonSystemItem: .action,
+            target: self,
+            action: #selector(sharePhoto)
+        )
+    }
     
     @objc private func sharePhoto() {
         guard let image = imageView.image else { return }
