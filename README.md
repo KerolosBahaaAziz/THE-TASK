@@ -20,6 +20,9 @@ It demonstrates clean architecture with **MVVM**, **Combine**, **UIKit**, and **
 - **Error Handling**
   - Network/API errors show a user-friendly **alert with Retry option**.
   - Prevents silent failures.
+ 
+- **Skeleton Loading**
+  - While content is loading, **SkeletonView** placeholders are displayed instead of empty white screens, improving UX.
 
 - **Bonus**
   - Photo viewer allows zoom and iOS share sheet.
@@ -40,6 +43,7 @@ That’s why when you run the project, you may only see system placeholders inst
   - [Moya](https://github.com/Moya/Moya) – networking abstraction
   - [CombineMoya](https://github.com/Moya/Moya) – Combine publishers for Moya
   - [SDWebImage](https://github.com/SDWebImage/SDWebImage) – async image loading & caching
+  - [SkeletonView](https://github.com/Juanpe/SkeletonView) – skeleton loading animations
 
 All dependencies are integrated using **Swift Package Manager**.
 
