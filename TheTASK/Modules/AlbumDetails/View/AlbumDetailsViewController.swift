@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Combine
+import SkeletonView
 
 final class AlbumDetailsViewController: UIViewController {
     
@@ -39,10 +40,7 @@ final class AlbumDetailsViewController: UIViewController {
         
         setupUI()
         bindViewModel()
-        
-        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
-        tapGesture.cancelsTouchesInView = false
-        view.addGestureRecognizer(tapGesture)
+
     }
     
     private func setupUI() {
@@ -52,7 +50,10 @@ final class AlbumDetailsViewController: UIViewController {
         collectionView.dataSource = self
         collectionView.delegate = self
         collectionView.register(PhotoCell.self, forCellWithReuseIdentifier: "PhotoCell")
-        
+        collectionView.keyboardDismissMode = .onDrag
+        collectionView.isSkeletonable = true
+        collectionView.showAnimatedGradientSkeleton()
+
         view.addSubview(searchBar)
         view.addSubview(collectionView)
         
@@ -71,15 +72,17 @@ final class AlbumDetailsViewController: UIViewController {
         ])
     }
     
-    @objc func dismissKeyboard() {
-        view.endEditing(true)
-    }
-    
     private func bindViewModel() {
         viewModel.$filteredPhotos
             .receive(on: RunLoop.main)
-            .sink { [weak self] _ in
-                self?.collectionView.reloadData()
+            .sink { [weak self] photos in
+                guard let self = self else { return }
+                if photos.isEmpty {
+                    self.collectionView.showAnimatedGradientSkeleton()
+                } else {
+                    self.collectionView.hideSkeleton()
+                    self.collectionView.reloadData()
+                }
             }
             .store(in: &cancellables)
         
@@ -92,7 +95,6 @@ final class AlbumDetailsViewController: UIViewController {
                 }
             }
             .store(in: &cancellables)
-
     }
 
 }
@@ -106,8 +108,6 @@ extension AlbumDetailsViewController: UICollectionViewDataSource, UICollectionVi
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "PhotoCell", for: indexPath) as! PhotoCell
         let photo = viewModel.filteredPhotos[indexPath.item]
-        print("cellForItemAt index: \(indexPath.item)")
-        print("================================================")
         cell.configure(with: photo)
         return cell
     }
@@ -123,6 +123,11 @@ extension AlbumDetailsViewController: UISearchBarDelegate {
     func searchBar(_ searchBar: UISearchBar, textDidChange searchText: String) {
         viewModel.searchQuery = searchText
     }
+
+    func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        searchBar.resignFirstResponder()
+    }
+
 }
 
 extension AlbumDetailsViewController: UICollectionViewDelegateFlowLayout {
@@ -135,4 +140,17 @@ extension AlbumDetailsViewController: UICollectionViewDelegateFlowLayout {
         return CGSize(width: width, height: width)
     }
 }
+
+// MARK: - Skeleton DataSource
+extension AlbumDetailsViewController: SkeletonCollectionViewDataSource {
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 12
+    }
+    
+    func collectionSkeletonView(_ skeletonView: UICollectionView, cellIdentifierForItemAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return "PhotoCell"
+    }
+}
+
 

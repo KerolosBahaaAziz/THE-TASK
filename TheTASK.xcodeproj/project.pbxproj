@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8FC307D24513A91F0078ED9D /* SkeletonView in Frameworks */ = {isa = PBXBuildFile; productRef = 8FC307D14513A91F0078ED9D /* SkeletonView */; };
 		8FE46BE12E787167006F57EC /* CombineMoya in Frameworks */ = {isa = PBXBuildFile; productRef = 8FE46BE02E787167006F57EC /* CombineMoya */; };
 		8FE46BE32E787167006F57EC /* Moya in Frameworks */ = {isa = PBXBuildFile; productRef = 8FE46BE22E787167006F57EC /* Moya */; };
 		8FE46BE62E787230006F57EC /* SDWebImage in Frameworks */ = {isa = PBXBuildFile; productRef = 8FE46BE52E787230006F57EC /* SDWebImage */; };
@@ -47,6 +48,7 @@
 				8FE46BE32E787167006F57EC /* Moya in Frameworks */,
 				8FE46BE82E787230006F57EC /* SDWebImageMapKit in Frameworks */,
 				8FE46BE12E787167006F57EC /* CombineMoya in Frameworks */,
+				8FC307D24513A91F0078ED9D /* SkeletonView in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,6 +95,7 @@
 				8FE46BE22E787167006F57EC /* Moya */,
 				8FE46BE52E787230006F57EC /* SDWebImage */,
 				8FE46BE72E787230006F57EC /* SDWebImageMapKit */,
+				8FC307D14513A91F0078ED9D /* SkeletonView */,
 			);
 			productName = TheTASK;
 			productReference = 8FDF3C242E775D20005D8D94 /* TheTASK.app */;
@@ -125,6 +128,7 @@
 			packageReferences = (
 				8FE46BDF2E787167006F57EC /* XCRemoteSwiftPackageReference "Moya" */,
 				8FE46BE42E787230006F57EC /* XCRemoteSwiftPackageReference "SDWebImage" */,
+				8FC307D04513A91F0078ED9D /* XCRemoteSwiftPackageReference "SkeletonView" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 8FDF3C252E775D20005D8D94 /* Products */;
@@ -166,6 +170,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TheTASK/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bosta-Task";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -193,6 +198,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = TheTASK/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = "Bosta-Task";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -354,6 +360,14 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		8FC307D04513A91F0078ED9D /* XCRemoteSwiftPackageReference "SkeletonView" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/Juanpe/SkeletonView.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.31.0;
+			};
+		};
 		8FE46BDF2E787167006F57EC /* XCRemoteSwiftPackageReference "Moya" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/Moya/Moya";
@@ -373,6 +387,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		8FC307D14513A91F0078ED9D /* SkeletonView */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 8FC307D04513A91F0078ED9D /* XCRemoteSwiftPackageReference "SkeletonView" */;
+			productName = SkeletonView;
+		};
 		8FE46BE02E787167006F57EC /* CombineMoya */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 8FE46BDF2E787167006F57EC /* XCRemoteSwiftPackageReference "Moya" */;

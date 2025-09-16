@@ -36,7 +36,7 @@ final class ProfileViewModel {
             .sink(receiveCompletion: { [weak self] completion in
                 self?.isLoading = false
                 if case .failure(let error) = completion {
-                    self?.errorMessage = error.localizedDescription // 👈 publish error
+                    self?.errorMessage = error.localizedDescription
                 }
             }, receiveValue: { [weak self] user, albums in
                 self?.user = user

@@ -14,7 +14,9 @@ final class PhotoCell: UICollectionViewCell {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        contentView.backgroundColor = .lightGray
+        contentView.backgroundColor = .systemGray6
+        contentView.isSkeletonable = true
+        imageView.isSkeletonable = true
         imageView.contentMode = .scaleAspectFill
         imageView.clipsToBounds = true
         contentView.addSubview(imageView)
@@ -31,9 +33,9 @@ final class PhotoCell: UICollectionViewCell {
     
     func configure(with photo: Photo) {
         print("Loading thumbnail: \(photo.thumbnailUrl)")
-        print("Configuring cell with photo id: \(photo.id)") 
+        print("Configuring cell with photo id: \(photo.id)")
         if let url = URL(string: photo.thumbnailUrl) {
-            imageView.sd_setImage(with: url, placeholderImage: UIImage(systemName: "photo"))
+            imageView.sd_setImage(with: url, placeholderImage: UIImage(systemName: "exclamationmark.triangle"))
         }
     }
 }

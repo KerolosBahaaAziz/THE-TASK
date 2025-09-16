@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import Combine
+import SkeletonView
 
 final class ProfileViewController: UIViewController {
     
@@ -30,25 +31,48 @@ final class ProfileViewController: UIViewController {
     }
     
     private func setupUI() {
-        headerNameLabel.font = .boldSystemFont(ofSize: 20)
+        headerNameLabel.font = .boldSystemFont(ofSize: 24)
         headerNameLabel.textAlignment = .center
-
-        headerAddressLabel.font = .systemFont(ofSize: 16)
+        
+        headerAddressLabel.font = .systemFont(ofSize: 18)
         headerAddressLabel.textColor = .secondaryLabel
         headerAddressLabel.textAlignment = .center
         headerAddressLabel.numberOfLines = 0
-
+        
         let headerStack = UIStackView(arrangedSubviews: [headerNameLabel, headerAddressLabel])
         headerStack.axis = .vertical
         headerStack.alignment = .center
         headerStack.spacing = 4
-
+        
         view.addSubview(headerStack)
         view.addSubview(tableView)
         
+        let headerView = UIView()
+        
+        let titleLabel = UILabel()
+        titleLabel.text = "My Albums"
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        titleLabel.textAlignment = .left
+        
+        headerView.addSubview(titleLabel)
+        headerView.backgroundColor = .systemGroupedBackground
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            titleLabel.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            titleLabel.trailingAnchor.constraint(equalTo: headerView.layoutMarginsGuide.trailingAnchor),
+            titleLabel.topAnchor.constraint(equalTo: headerView.topAnchor, constant: 8),
+            titleLabel.bottomAnchor.constraint(equalTo: headerView.bottomAnchor, constant: -8)
+        ])
+        
+        headerView.frame = CGRect(x: 0, y: 0, width: tableView.bounds.width, height: 35)
+        
+        tableView.tableHeaderView = headerView
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "AlbumCell")
+        tableView.isSkeletonable = true
+        tableView.showAnimatedGradientSkeleton()
         
         view.addSubview(tableView)
         
@@ -59,7 +83,7 @@ final class ProfileViewController: UIViewController {
             headerStack.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             headerStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             headerStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-
+            
             tableView.topAnchor.constraint(equalTo: headerStack.bottomAnchor, constant: 8),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
@@ -79,8 +103,14 @@ final class ProfileViewController: UIViewController {
         
         viewModel.$albums
             .receive(on: RunLoop.main)
-            .sink { [weak self] _ in
-                self?.tableView.reloadData()
+            .sink { [weak self] albums in
+                guard let self = self else { return }
+                if albums.isEmpty {
+                    self.tableView.showAnimatedGradientSkeleton()
+                } else {
+                    self.tableView.hideSkeleton()
+                    self.tableView.reloadData()
+                }
             }
             .store(in: &cancellables)
         
@@ -108,6 +138,8 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         cell.textLabel?.text = viewModel.albums[indexPath.row].title
         cell.accessoryType = .disclosureIndicator
         cell.selectionStyle = .none
+        cell.textLabel?.isSkeletonable = true
+        cell.textLabel?.numberOfLines = 0
         return cell
     }
     
@@ -117,8 +149,17 @@ extension ProfileViewController: UITableViewDataSource, UITableViewDelegate {
         navigationController?.pushViewController(detailsVC, animated: true)
     }
     
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return "My Albums"
+
+
+}
+
+extension ProfileViewController: SkeletonTableViewDataSource {
+    
+    func collectionSkeletonView(_ skeletonView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return 12
     }
 
+    func collectionSkeletonView(_ skeletonView: UITableView, cellIdentifierForRowAt indexPath: IndexPath) -> ReusableCellIdentifier {
+        return "AlbumCell"
+    }
 }

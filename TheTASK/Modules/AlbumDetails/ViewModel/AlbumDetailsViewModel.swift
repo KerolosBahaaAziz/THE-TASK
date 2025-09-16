@@ -17,7 +17,7 @@ final class AlbumDetailsViewModel {
     @Published var errorMessage: String?
     
     private var cancellables = Set<AnyCancellable>()
-    private let provider = MoyaProvider<ApiService>()   
+    private let provider = MoyaProvider<ApiService>()
         
     func fetchPhotos(albumId: Int) {
         let target = ApiService.getPhotos(albumId: albumId)
@@ -29,14 +29,14 @@ final class AlbumDetailsViewModel {
             .sink(
                 receiveCompletion: { [weak self] completion in
                     if case .failure(let error) = completion {
-                        print("❌ Error: \(error)")
+                        print(" Error: \(error)")
                         self?.errorMessage = error.localizedDescription
                     }
                 },
                 receiveValue: { [weak self] photos in
                     self?.photos = photos
                     self?.filteredPhotos = photos
-                    print("✅ Received \(photos.count) photos")
+                    print(" Received \(photos.count) photos")
                 }
             )
             .store(in: &cancellables)
